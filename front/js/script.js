@@ -13,33 +13,28 @@ function insertItems(items) {
     const item = items[i];
     console.log(item);
 
+    const articleElement = document.createElement('article');
+    articleElement.article = '';
+
     const productElement = document.createElement('a');
     productElement.href = `./product.html?id=${item._id}`;//mls4
-    
-    const articleElement = document.createElement('article');
-    articleElement.article ='Kanap Sinopé';
 
     const imageElement = document.createElement('img');
     imageElement.src = 'product01.jpg';
     imageElement.alt = 'Lorem ipsum dolor sit amet, Kanap name1';
-    imageElement.classList.add('newItem.src');
+    imageElement.classList.add('src');
+    imageElement.classList.add('alt');
 
-    productElement.innerHTML = `<h3>${items.name}</h3>
-    <p>${items.description}</p>
-    `;
 
-    productElement.classList.add('text-center');
+    //this line display item's name and description
+    productElement.innerHTML = `<h3>${item.name}</h3>
+    <p>${item.description}</p>`;
 
     imageElement.setAttribute('src', item.imageUrl);
-    imageElement.classList.add('img-center');
-    productElement.appendChild(imageElement);
-    itemsHolder.appendChild(productElement);
+    imageElement.setAttribute('alt', imageElement.altTxt);
+
     itemsHolder.appendChild(articleElement);
-
-    
-    // TODO finish adding all teg with correct attributes 
-
-
+    productElement.appendChild(imageElement);
     itemsHolder.appendChild(productElement);
   }
 
