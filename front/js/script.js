@@ -13,28 +13,25 @@ function insertItems(items) {
     const item = items[i];
     console.log(item);
 
-    const articleElement = document.createElement('article');
-    articleElement.article = '';
-
     const productElement = document.createElement('a');
     productElement.href = `./product.html?id=${item._id}`;//mls4
 
-    const imageElement = document.createElement('img');
-    imageElement.src = 'product01.jpg';
-    imageElement.alt = 'Lorem ipsum dolor sit amet, Kanap name1';
-    imageElement.classList.add('src');
-    imageElement.classList.add('alt');
+    const articleElement = document.createElement('article');
+    productElement.appendChild(articleElement);
 
+    const imageElement = document.createElement('img');
+    imageElement.setAttribute('src', item.imageUrl);
+    imageElement.setAttribute('alt', item.altTxt);
+
+    articleElement.appendChild(imageElement);
 
     //this line display item's name and description
-    productElement.innerHTML = `<h3>${item.name}</h3>
-    <p>${item.description}</p>`;
+    articleElement.innerHTML += `
+      <h3 class="productName">${item.name}</h3>
+      <p class="productDescription">${item.description}</p>
+    `;
 
-    imageElement.setAttribute('src', item.imageUrl);
-    imageElement.setAttribute('alt', imageElement.altTxt);
 
-    itemsHolder.appendChild(articleElement);
-    productElement.appendChild(imageElement);
     itemsHolder.appendChild(productElement);
   }
 
