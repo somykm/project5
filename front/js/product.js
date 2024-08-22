@@ -11,26 +11,21 @@ fetch(`http://localhost:3000/api/products/${productId}`)
   .then(product => {
     console.log(product.description);
     console.log(product.price);
-    // displayData(product);
-    //TODO call fun to inset product info
-    // insertItems(product);
+    displayData(product);//call func
+  })
+  .catch(error => {
+    console.error('error fetching:', error)
   });
-
+//part6, display data u get from api
 function displayData(product) {
+  const priceParag = document.getElementById('price');
+  const descriptionParag = document.getElementById('description');
 
-  for (let i = 0; i < product.length; i++) {
-    const products = product[i];
-    console.log(products);
-
-    const priceParag = document.getElementById('price');
-    const descriptionParag = document.getElementById('description');
-    // const itemContent = document.querySelector('.item__content');
-
-    priceParag.textContent = `:${products.price}`;
-    descriptionParag.textContent = `: ${products.description}`;
-
+  if (priceParag && descriptionParag) {
+    priceParag.textContent = `${product.price}`;
+    descriptionParag.textContent = `${product.description}`;
+  } else {
+    console.error('Price or description element not found');
   }
 }
 
-
-//TODO (m6) insert product detail into page, by using innerHTML or innerText(create fun to insert product info)
