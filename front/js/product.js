@@ -14,7 +14,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     displayData(product);//call func
     displayImage(product);
     insertColorOptions(product);
-    getItemQuantity(product);
+
   })
   .catch(error => {
     console.error('error fetching:', error)
@@ -81,32 +81,44 @@ function insertColorOptions(product) {
   });
 }
 
+const addToCartButton = document.getElementById('addToCart');
 
-const itemQuan = document.getElementsByTagName('label');
-const selectBtn = document.getElementById('addToCart');
+addToCartButton.addEventListener('click', () => {
+  const quantity = parseInt(document.getElementById('quantity').value);
+  const color = document.getElementById('colors').value;
+  //create an array of item detail
+  let cartItem = {
+    id: productId,
+    color,
+    quantity
+  };
 
-function getItemQuantity() {
-  
-  itemQuan.textContent = quantity;
-}
-selectBtn.addEventListener('click', ()=>{
-  const quantity = document.getElementById('itemQuantity').value;
-  itemQuan.textContent = quantity;
-  localStorage.setItem("itemQuantity", quantity);
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  //TODO check first if there is already the same id in the cart, if there is increase the Quan if not puch it
+  const itemIdToFind = productId;
+  // const quantityToAdd = quantity;
+  let foundItem = false;
+
+  for (let item of cart) {
+    if (item.id === itemIdToFind) {
+      item.quantity += quantity;
+      foundItem = true;
+      break;
+    }
+  }
+
+  if (!foundItem) {
+    cart.push({ id: itemIdToFind, quantity: quantity, color: color });
+  } else {
+    console.log(`Item with id ${itemIdToFind}not found.`);
+    cart.push(cartItem);
+  }
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+  //TODO  show alert indecating product added to the cart sussessfully 
+
 })
-
-let itemDetail = [
-{id: productId,
-color:insertColorOptions(),
-quantityOfItem:getItemQuantity()}
-];
-
-const itemsString = JSON.stringify(itemDetail);//convert into array
-
-localStorage.setItem('itemDetail', itemsString);
-
-
-
 
 //TODO add event listener for button
 //Fetch selected, color , and Id add them 
