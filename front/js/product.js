@@ -19,6 +19,8 @@ fetch(`http://localhost:3000/api/products/${productId}`)
   .catch(error => {
     console.error('error fetching:', error)
   });
+  const colorSelectionAccess = document.getElementById('colors');
+  const addToCartButton = document.getElementById('addToCart');
 //part6, display data u get from api
 /**
  * Inserts selected item info like as description, price, name.
@@ -62,8 +64,6 @@ function displayImage(product) {
   }
 }
 
-const colorSelectionAccess = document.getElementById('colors');
-
 /**
  * Inserts color options for given products.
  * 
@@ -81,8 +81,6 @@ function insertColorOptions(product) {
   });
 }
 
-const addToCartButton = document.getElementById('addToCart');
-
 addToCartButton.addEventListener('click', () => {
   const quantity = parseInt(document.getElementById('quantity').value);
   const color = document.getElementById('colors').value;
@@ -96,11 +94,9 @@ addToCartButton.addEventListener('click', () => {
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
   //TODO check first if there is already the same id in the cart, if there is increase the Quan if not puch it
   const itemIdToFind = productId;
-  // const quantityToAdd = quantity;
   let foundItem = false;
-
   for (let item of cart) {
-    if (item.id === itemIdToFind) {
+    if (item.id === itemIdToFind && item.color ===color) {
       item.quantity += quantity;
       foundItem = true;
       break;
@@ -117,7 +113,6 @@ addToCartButton.addEventListener('click', () => {
   localStorage.setItem('cart', JSON.stringify(cart));
 
   //TODO  show alert indecating product added to the cart sussessfully 
-
 })
 
 //TODO add event listener for button
