@@ -50,16 +50,16 @@ function displayData(product) {
  */
 function displayImage(product) {
   //access DOM 
-  const articleSec = document.querySelector('article');
-  const imageSec = document.querySelector('.item__img');
+  // const articleSec = document.querySelector('article');
+  const imageSection = document.querySelector('.item__img');
 
-  const imageEl = document.createElement('img');
-  imageEl.setAttribute('src', product.imageUrl);
-  imageEl.setAttribute('alt', product.altTxt);
+  const imageElement = document.createElement('img');
+  imageElement.setAttribute('src', product.imageUrl);
+  imageElement.setAttribute('alt', product.altTxt);
 
-  imageSec.appendChild(imageEl);
+  imageSection.appendChild(imageElement);
 
-  if (imageSec) {
+  if (imageSection) {
     document.body.style.backgroundImage = "url('" + product.imageUrl + "')";
   }
 }
