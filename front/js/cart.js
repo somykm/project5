@@ -77,19 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
             updateLocalStorage();
           });
 
-
-          // deleteItem.addEventListener('click', (event) => {
-          //   const cartArticle = event.target.closest('.cart__item');
-          //   const itemId = cartArticle.getAttribute('data-id');
-          //   const itemColor = cartArticle.getAttribute('data-color');
-
-          //   cart = cart.filter(item => item.id !== itemId || item.color !== itemColor);
-          //   cartArticle.remove();
-          //   updateLocalStorage();
-          //   updateTotalPrice();
-          //   updateTotalQuantity();
-          // });
-
           displayTotalQuantity(cartItem);
         }
       });
@@ -114,6 +101,8 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('cart', JSON.stringify(cart));
       };
 
+      updateTotalPrice();
+      updateTotalQuantity();
 
       function displayTotalQuantity(cartItem) {
         const displayElement = document.getElementById('totalQuantity');
@@ -125,4 +114,28 @@ document.addEventListener('DOMContentLoaded', function () {
     .catch(error => console.log(error));
 });
 
+//mileS-9
+const firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
 
+const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
+
+const addressErrorMsg = document.getElementById('addressErrorMsg');
+const cityErrorMsg = document.getElementById('cityErrorMsg');
+const emailErrorMsg =document.getElementById('emailErrorMsg');
+const submitButton = document.querySelector('submit');
+
+submitButton.addEventListener('blur', ($event) =>{
+  $event.preventDefault();
+  const userFirstName = document.getElementById('firstName').value;
+  const userLastName =document.getElementById('lastName').value;
+  const userAddress = parseInt(document.getElementById('address').value);
+  const userCity = document.getElementById('city').value;
+  const userEmail =parseInt(document.getElementById('email').value);
+
+  const post = {fisrtName: userFirstName.value,
+    lastName: userLastName.value,
+    address: userAddress.value,
+    city: userCity.value,
+    email: userEmail.value
+  };
+});
