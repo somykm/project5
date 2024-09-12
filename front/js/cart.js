@@ -52,6 +52,30 @@ document.addEventListener('DOMContentLoaded', function () {
           input.setAttribute('max', '100');
           input.setAttribute('value', cartItem.quantity);
 
+          // Add event listener for quantity change
+          input.addEventListener('change', ($event) => {
+            const articleElement = $event.target.closest('article');
+            const newQuantity = parseInt($event.target.value, 10);
+            const itemId = articleElement.getAttribute('data-id');
+            const itemColor = articleElement.getAttribute('data-color');
+
+            // Update the cart array
+            const cartItem = cart.find(item => item.id === itemId && item.color === itemColor);
+            if (cartItem) {
+              cartItem.quantity = newQuantity;
+            }
+            // Update local storage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateTotalPrice(cart);
+            updateTotalQuantity(cart);
+
+            //TODO add code to get the new quantity for the cart item that being change by user
+            //TODO get cart item, product id and color that being changed
+            //TODO get the latest cart from local Storage
+            //TODO provide the price of the item that has been changed by passing in the products array 
+            //TODO after getting the new quantity update the new totals, price, and local Storage 
+          });
+
           itemContentSettingQuantity.appendChild(input);
           cartItemContentSetting.appendChild(itemContentSettingQuantity);
 
@@ -62,27 +86,23 @@ document.addEventListener('DOMContentLoaded', function () {
           cartItemContentSetting.appendChild(deleteItem);
 
           // Add event listener for delete button
-          deleteItem.addEventListener('click', () => {
-            if (cartItem.quantity > 1) {
-              cartItem.quantity--;
-              input.value = cartItem.quantity;
-              itemContentSettingQuantity.innerHTML = `<p>Quantity: ${cartItem.quantity}</p>`;
-            }
-            else {
-              cart = cart.filter(item => item.id !== cartItem.id || item.color !== cartItem.color);
-              cartArticle.remove();
-            }
-            updateTotalPrice();
-            updateTotalQuantity();
-            updateLocalStorage();
-          });
+          deleteItem.addEventListener('click', ($event) => {
+            const cartArticle = $event.target.closest('.cart__item');
+            const itemId = cartArticle.getAttribute('data-id');
+            const itemColor = cartArticle.getAttribute('data-color');
 
+            cart = cart.filter(item => item.id !== itemId || item.color !== itemColor);
+            cartArticle.remove();
+            updateLocalStorage(cart);
+            updateTotalPrice(cart);
+            updateTotalQuantity(cart);
+          });
           displayTotalQuantity(cartItem);
         }
       });
 
       // Calculate and display total price
-      const updateTotalPrice = () => {
+      const updateTotalPrice = (cart) => {
         const totalPrice = cart.reduce((total, cartItem) => {
           const product = products.find(item => item._id === cartItem.id);
           return total + (product.price * cartItem.quantity);
@@ -91,18 +111,18 @@ document.addEventListener('DOMContentLoaded', function () {
       };
 
       // Update total quantity
-      const updateTotalQuantity = () => {
+      const updateTotalQuantity = (cart) => {
         const totalQuantity = cart.reduce((total, cartItem) => total + cartItem.quantity, 0);
         document.getElementById('totalQuantity').innerText = `${totalQuantity}`;
       };
 
       //update local storage
-      const updateLocalStorage = () => {
+      const updateLocalStorage = (cart) => {
         localStorage.setItem('cart', JSON.stringify(cart));
       };
 
-      updateTotalPrice();
-      updateTotalQuantity();
+      updateTotalPrice(cart);
+      updateTotalQuantity(cart);
 
       function displayTotalQuantity(cartItem) {
         const displayElement = document.getElementById('totalQuantity');
@@ -123,19 +143,33 @@ const addressErrorMsg = document.getElementById('addressErrorMsg');
 const cityErrorMsg = document.getElementById('cityErrorMsg');
 const emailErrorMsg =document.getElementById('emailErrorMsg');
 const submitButton = document.querySelector('submit');
+const userFirstName = document.getElementById('firstName');
+  const userLastName =document.getElementById('lastName');
+  const userAddress = document.getElementById('address');
+  const userCity = document.getElementById('city');
+  const userEmail =document.getElementById('email');
 
-submitButton.addEventListener('blur', ($event) =>{
-  $event.preventDefault();
-  const userFirstName = document.getElementById('firstName').value;
-  const userLastName =document.getElementById('lastName').value;
-  const userAddress = parseInt(document.getElementById('address').value);
-  const userCity = document.getElementById('city').value;
-  const userEmail =parseInt(document.getElementById('email').value);
+// submitButton.addEventListener('blur', ($event) =>{
+//   $event.preventDefault();
+//   const userFirstName = document.getElementById('firstName').value;
+//   const userLastName =document.getElementById('lastName').value;
+//   const userAddress = parseInt(document.getElementById('address').value);
+//   const userCity = document.getElementById('city').value;
+//   const userEmail =parseInt(document.getElementById('email').value);
 
-  const post = {fisrtName: userFirstName.value,
-    lastName: userLastName.value,
-    address: userAddress.value,
-    city: userCity.value,
-    email: userEmail.value
-  };
+//   const post = {fisrtName: userFirstName.value,
+//     lastName: userLastName.value,
+//     address: userAddress.value,
+//     city: userCity.value,
+//     email: userEmail.value
+//   };
+// });
+
+userFirstName.addEventListener('input', ($event)=>{
+if($event.target.value !==(character) && $event.target.value !==(null)){
+  
+}
+else{
+  firstNameErrorMsg.innerText= "The name you entered is not a valid name";
+}
 });
