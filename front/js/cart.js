@@ -135,125 +135,129 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 //mileS-9
-const addressErrorMsg = document.getElementById('addressErrorMsg');
-const cityErrorMsg = document.getElementById('cityErrorMsg');
-const emailErrorMsg = document.getElementById('emailErrorMsg');
-// const order = document.getElementById('order');
+document.addEventListener('DOMContentLoaded', function () {
+  const addressErrorMsg = document.getElementById('addressErrorMsg');
+  const cityErrorMsg = document.getElementById('cityErrorMsg');
+  const emailErrorMsg = document.getElementById('emailErrorMsg');
 
-document.querySelector('.cart__order__form').addEventListener('submit', function ($event) {
-  $event.preventDefault();
-
-  const firstName = document.getElementById('firstName').value;
-  const lastName = document.getElementById('lastName').value;
-  const address = document.getElementById('address').value;
-  const city = document.getElementById('city').value;
-  const email = document.getElementById('email').value;
-
-  let isValid = true;
-
-  // Validate first name
-  if (firstName === '') {
-    document.getElementById('firstNameErrorMsg').innerText = 'First name is required';
-    isValid = false;
-  } else {
-    document.getElementById('firstNameErrorMsg').innerText = '';
-  }
-
-  if (lastName === '') {
-    document.getElementById('lastNameErrorMsg').innerText = 'Last name is required';
-    isValid = false;
-  } else {
-    document.getElementById('lastNameErrorMsg').innerText = '';
-  }
-
-  if (address === '') {
-    addressErrorMsg.innerText = 'Address is required';
-    isValid = false;
-  } else {
-    addressErrorMsg.innerText = '';
-  }
-
-  if (city === '') {
-    cityErrorMsg.innerText = 'Enter a valid city name';
-    isValid = false;
-  } else {
-    cityErrorMsg.innerText = '';
-  }
-
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(email)) {
-    emailErrorMsg.innerText = 'Enter a valid email!';
-    isValid = false;
-  } else {
-    emailErrorMsg.innerText = '';
-  }
-
-  if (isValid) {
-    // Create order object
-    const productIds = [];
-    cart.forEach(item => {
-      productIds.push(item.id);
-    });
-
-    const order = {
-      contact: {
-        firstName,
-        lastName,
-        address,
-        city,
-        email
-      },
-      products: productIds
+  document.querySelector('.cart__order__form').addEventListener('submit', ($event) => {
+    $event.preventDefault();
+    const contact = {
+      firstName: document.getElementById('firstName').value,
+      lastName: document.getElementById('lastName').value,
+      address: document.getElementById('address').value,
+      city: document.getElementById('city').value,
+      email: document.getElementById('email').value
     };
-    // Send order to server
-    fetch('http://localhost:3000/api/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(order)
-    })
-      .then(response => response.json())
-      .then(data => {
-        alert('Order confirmed! Order ID: ' + data.orderId);
-        // Clear cart and local storage
-        cart = [];
-        localStorage.removeItem('cart');
-        updateTotalPrice();
-        updateTotalQuantity();
-        // Optionally, redirect to a confirmation page
-        // window.location.href = 'confirmation.html';
+
+    let isValid = true;
+
+    // Validate first name, last, address...
+    if (contact.firstName === '') {
+      document.getElementById('firstNameErrorMsg').innerText = 'First name is required';
+      isValid = false;
+    } else {
+      document.getElementById('firstNameErrorMsg').innerText = '';
+    }
+
+    if (contact.lastName === '') {
+      document.getElementById('lastNameErrorMsg').innerText = 'Last name is required';
+      isValid = false;
+    } else {
+      document.getElementById('lastNameErrorMsg').innerText = '';
+    }
+
+    if (contact.address === '') {
+      addressErrorMsg.innerText = 'Address is required';
+      isValid = false;
+    } else {
+      addressErrorMsg.innerText = '';
+    }
+
+    if (contact.city === '') {
+      cityErrorMsg.innerText = 'Enter a valid city name';
+      isValid = false;
+    } else {
+      cityErrorMsg.innerText = '';
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(contact.email)) {
+      emailErrorMsg.innerText = 'Enter a valid email!';
+      isValid = false;
+    } else {
+      emailErrorMsg.innerText = '';
+    }
+
+    if (isValid) {
+      // Create order object
+      const productIds = [];
+      cart.forEach(item => {
+        productIds.push(item.id);
+      });
+
+      const order = {
+        contact: contact,
+        products: productIds
+      };
+
+      // Send order to server
+      fetch('http://localhost:3000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(order)
       })
-      .catch(error => console.error('Error:', error));
-  }
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+          }
+          return response.json();
+        })
+        .then(data => {
+          alert('Order confirmed! Order ID: ' + data.orderId);
+          // Clear cart and local storage
+          cart = [];
+          localStorage.removeItem('cart');
+          updateTotalPrice();
+          updateTotalQuantity();
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+  });
 });
 
-const updateTotalPrice = () => {
-  const totalPrice = cart.reduce((total, cartItem) => {
-    const product = products.find(item => item._id === cartItem.id);
-    return total + (product.price * cartItem.quantity);
-  }, 0);
+// const updateTotalPrice = () => {
+//   const totalPrice = cart.reduce((total, cartItem) => {
+//     const product = products.find(item => item._id === cartItem.id);
+//     return total + (product.price * cartItem.quantity);
+//   }, 0);
 
-  document.getElementById('totalPrice').innerText = `${totalPrice}`;
-};
+//   document.getElementById('totalPrice').innerText = `${totalPrice}`;
+// };
 
-const updateTotalQuantity = () => {
-  const totalQuantity = cart.reduce((total, cartItem) => total + cartItem.quantity, 0);
-  document.getElementById('totalQuantity').innerText = `${totalQuantity}`;
-};
-// submitButton.addEventListener('blur', ($event) =>{
-//   $event.preventDefault();
-//   const userFirstName = document.getElementById('firstName').value;
-//   const userLastName =document.getElementById('lastName').value;
-//   const userAddress = parseInt(document.getElementById('address').value);
-//   const userCity = document.getElementById('city').value;
-//   const userEmail =parseInt(document.getElementById('email').value);
+// const updateTotalQuantity = () => {
+//   const totalQuantity = cart.reduce((total, cartItem) => total + cartItem.quantity, 0);
+//   document.getElementById('totalQuantity').innerText = `${totalQuantity}`;
+// };
 
-//   const post = {fisrtName: userFirstName.value,
-//     lastName: userLastName.value,
-//     address: userAddress.value,
-//     city: userCity.value,
-//     email: userEmail.value
-//   };
-// });
+// fetch('http://localhost:3000/api/orders', {
+//   method: 'POST',
+//   headers: {
+//     'Content-Type': 'application/json'
+//   },
+//   body: JSON.stringify(order)
+// })
+// .then(response => response.json())
+// .then(data => {
+//   alert('Order confirmed! Order ID: ' + data.orderId);
+//   // Clear cart,local storage
+//   cart = [];
+//   localStorage.removeItem('cart');
+//   updateTotalPrice();
+//   updateTotalQuantity();
+// })
 
