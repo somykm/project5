@@ -135,20 +135,112 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 //mileS-9
-const firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
-
-const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
-
 const addressErrorMsg = document.getElementById('addressErrorMsg');
 const cityErrorMsg = document.getElementById('cityErrorMsg');
-const emailErrorMsg =document.getElementById('emailErrorMsg');
-const submitButton = document.querySelector('submit');
-const userFirstName = document.getElementById('firstName');
-  const userLastName =document.getElementById('lastName');
-  const userAddress = document.getElementById('address');
-  const userCity = document.getElementById('city');
-  const userEmail =document.getElementById('email');
+const emailErrorMsg = document.getElementById('emailErrorMsg');
+// const order = document.getElementById('order');
 
+document.querySelector('.cart__order__form').addEventListener('submit', function ($event) {
+  $event.preventDefault();
+
+  const firstName = document.getElementById('firstName').value;
+  const lastName = document.getElementById('lastName').value;
+  const address = document.getElementById('address').value;
+  const city = document.getElementById('city').value;
+  const email = document.getElementById('email').value;
+
+  let isValid = true;
+
+  // Validate first name
+  if (firstName === '') {
+    document.getElementById('firstNameErrorMsg').innerText = 'First name is required';
+    isValid = false;
+  } else {
+    document.getElementById('firstNameErrorMsg').innerText = '';
+  }
+
+  if (lastName === '') {
+    document.getElementById('lastNameErrorMsg').innerText = 'Last name is required';
+    isValid = false;
+  } else {
+    document.getElementById('lastNameErrorMsg').innerText = '';
+  }
+
+  if (address === '') {
+    addressErrorMsg.innerText = 'Address is required';
+    isValid = false;
+  } else {
+    addressErrorMsg.innerText = '';
+  }
+
+  if (city === '') {
+    cityErrorMsg.innerText = 'Enter a valid city name';
+    isValid = false;
+  } else {
+    cityErrorMsg.innerText = '';
+  }
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    emailErrorMsg.innerText = 'Enter a valid email!';
+    isValid = false;
+  } else {
+    emailErrorMsg.innerText = '';
+  }
+
+  if (isValid) {
+    // Create order object
+    const productIds = [];
+    cart.forEach(item => {
+      productIds.push(item.id);
+    });
+
+    const order = {
+      contact: {
+        firstName,
+        lastName,
+        address,
+        city,
+        email
+      },
+      products: productIds
+    };
+    // Send order to server
+    fetch('http://localhost:3000/api/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(order)
+    })
+      .then(response => response.json())
+      .then(data => {
+        alert('Order confirmed! Order ID: ' + data.orderId);
+        // Clear cart and local storage
+        cart = [];
+        localStorage.removeItem('cart');
+        updateTotalPrice();
+        updateTotalQuantity();
+        // Optionally, redirect to a confirmation page
+        // window.location.href = 'confirmation.html';
+      })
+      .catch(error => console.error('Error:', error));
+  }
+});
+
+const updateTotalPrice = () => {
+  const totalPrice = cart.reduce((total, cartItem) => {
+    const product = products.find(item => item._id === cartItem.id);
+    return total + (product.price * cartItem.quantity);
+  }, 0);
+
+  document.getElementById('totalPrice').innerText = `${totalPrice}`;
+};
+
+const updateTotalQuantity = () => {
+  const totalQuantity = cart.reduce((total, cartItem) => total + cartItem.quantity, 0);
+  document.getElementById('totalQuantity').innerText = `${totalQuantity}`;
+};
 // submitButton.addEventListener('blur', ($event) =>{
 //   $event.preventDefault();
 //   const userFirstName = document.getElementById('firstName').value;
@@ -165,11 +257,3 @@ const userFirstName = document.getElementById('firstName');
 //   };
 // });
 
-userFirstName.addEventListener('input', ($event)=>{
-if($event.target.value !==(character) && $event.target.value !==(null)){
-  
-}
-else{
-  firstNameErrorMsg.innerText= "The name you entered is not a valid name";
-}
-});
