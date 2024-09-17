@@ -154,14 +154,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Validate first name, last, address...
     const nameRegex = /^[A-Z][a-z]*$/;//First letter capital, rest lowercase
     if (!nameRegex.test(contact.firstName)) {
-      document.getElementById('firstNameErrorMsg').innerText = 'First name is required';
+      document.getElementById('firstNameErrorMsg').innerText = 'Enter a valid name';
       isValid = false;
     } else {
       document.getElementById('firstNameErrorMsg').innerText = '';
     }
 
     if (!nameRegex.test(contact.lastName)) {
-      document.getElementById('lastNameErrorMsg').innerText = 'Last name is required';
+      document.getElementById('lastNameErrorMsg').innerText = 'Enter a valid last name!';
       isValid = false;
     } else {
       document.getElementById('lastNameErrorMsg').innerText = '';
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const addressRegex =/^\d+\s[A-Aa-z\s]+$/; //start with num, followed by street name
     if (!addressRegex.test(contact.address)) {
-      addressErrorMsg.innerText = 'Address is required';
+      addressErrorMsg.innerText = 'Enter a valid address!';
       isValid = false;
     } else {
       addressErrorMsg.innerText = '';
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const cityRegex =/^[A-Za-z\s]+$/;//only letter and white space
     if (!cityRegex.test(contact.city)) {
-      cityErrorMsg.innerText = 'Enter a valid city name';
+      cityErrorMsg.innerText = 'Enter a valid city name!';
       isValid = false;
     } else {
       cityErrorMsg.innerText = '';
