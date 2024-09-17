@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let isValid = true;
 
     // Validate first name, last, address...
-    const nameRegex = /^[A-Z][a-z]*$/;//First letter capital, rest lowercase
+    const nameRegex = /^[a-z]*$/;// lowercase
     if (!nameRegex.test(contact.firstName)) {
       document.getElementById('firstNameErrorMsg').innerText = 'Enter a valid name';
       isValid = false;
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
       };
 
       // Send order to server
-      fetch('http://localhost:3000/api/orders', {
+      fetch('http://localhost:3000/api/products/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
