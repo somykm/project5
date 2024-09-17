@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const addressErrorMsg = document.getElementById('addressErrorMsg');
   const cityErrorMsg = document.getElementById('cityErrorMsg');
   const emailErrorMsg = document.getElementById('emailErrorMsg');
-
   document.querySelector('.cart__order__form').addEventListener('submit', ($event) => {
     $event.preventDefault();
     const contact = {
@@ -153,36 +152,39 @@ document.addEventListener('DOMContentLoaded', function () {
     let isValid = true;
 
     // Validate first name, last, address...
-    if (contact.firstName === '') {
+    const nameRegex = /^[A-Z][a-z]*$/;//First letter capital, rest lowercase
+    if (!nameRegex.test(contact.firstName)) {
       document.getElementById('firstNameErrorMsg').innerText = 'First name is required';
       isValid = false;
     } else {
       document.getElementById('firstNameErrorMsg').innerText = '';
     }
 
-    if (contact.lastName === '') {
+    if (!nameRegex.test(contact.lastName)) {
       document.getElementById('lastNameErrorMsg').innerText = 'Last name is required';
       isValid = false;
     } else {
       document.getElementById('lastNameErrorMsg').innerText = '';
     }
 
-    if (contact.address === '') {
+    const addressRegex =/^\d+\s[A-Aa-z\s]+$/; //start with num, followed by street name
+    if (!addressRegex.test(contact.address)) {
       addressErrorMsg.innerText = 'Address is required';
       isValid = false;
     } else {
       addressErrorMsg.innerText = '';
     }
 
-    if (contact.city === '') {
+    const cityRegex =/^[A-Za-z\s]+$/;//only letter and white space
+    if (!cityRegex.test(contact.city)) {
       cityErrorMsg.innerText = 'Enter a valid city name';
       isValid = false;
     } else {
       cityErrorMsg.innerText = '';
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(contact.email)) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(contact.email)) {
       emailErrorMsg.innerText = 'Enter a valid email!';
       isValid = false;
     } else {
@@ -192,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (isValid) {
       // Create order object
       const productIds = [];
-      cart.forEach(item => {
+       productIds.forEach(item => {
         productIds.push(item.id);
       });
 
@@ -230,34 +232,18 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// const updateTotalPrice = () => {
-//   const totalPrice = cart.reduce((total, cartItem) => {
-//     const product = products.find(item => item._id === cartItem.id);
-//     return total + (product.price * cartItem.quantity);
-//   }, 0);
+const updateTotalPrice = () => {
+  const totalPrice = cart.reduce((total, cartItem) => {
+    const product = products.find(item => item._id === cartItem.id);
+    return total + (product.price * cartItem.quantity);
+  }, 0);
 
-//   document.getElementById('totalPrice').innerText = `${totalPrice}`;
-// };
+  document.getElementById('totalPrice').innerText = `${totalPrice}`;
+};
 
-// const updateTotalQuantity = () => {
-//   const totalQuantity = cart.reduce((total, cartItem) => total + cartItem.quantity, 0);
-//   document.getElementById('totalQuantity').innerText = `${totalQuantity}`;
-// };
+const updateTotalQuantity = () => {
+  const totalQuantity = cart.reduce((total, cartItem) => total + cartItem.quantity, 0);
+  document.getElementById('totalQuantity').innerText = `${totalQuantity}`;
+};
 
-// fetch('http://localhost:3000/api/orders', {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/json'
-//   },
-//   body: JSON.stringify(order)
-// })
-// .then(response => response.json())
-// .then(data => {
-//   alert('Order confirmed! Order ID: ' + data.orderId);
-//   // Clear cart,local storage
-//   cart = [];
-//   localStorage.removeItem('cart');
-//   updateTotalPrice();
-//   updateTotalQuantity();
-// })
 
