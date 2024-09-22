@@ -112,6 +112,11 @@ document.addEventListener('DOMContentLoaded', function () {
       updateTotalPrice(cart);
       updateTotalQuantity(cart);
 
+      /**
+       * Display total quantity of items on cart
+       * 
+       * @param {object} cartItem 
+       */
       function displayTotalQuantity(cartItem) {
         const displayElement = document.getElementById('totalQuantity');
 

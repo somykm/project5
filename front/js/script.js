@@ -8,6 +8,12 @@ fetch('http://localhost:3000/api/products')
   });
 
   const itemsHolder = document.getElementById('items');
+
+  /**
+   * display selected item's image, name, description on product page
+   * 
+   * @param {object} items 
+   */
   function insertItems(items) {
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
