@@ -1,7 +1,7 @@
 //part5
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const productId = urlParams.get('id');//to get the id of the item
+const productId = urlParams.get('id');
 console.log('product ID:', productId);
 
 fetch(`http://localhost:3000/api/products/${productId}`)
@@ -11,17 +11,16 @@ fetch(`http://localhost:3000/api/products/${productId}`)
   .then(product => {
     console.log(product.description);
     console.log(product.price);
-    displayData(product);//call func
+    displayData(product);
     displayImage(product);
     insertColorOptions(product);
-
   })
   .catch(error => {
     console.error('error fetching:', error)
   });
 const colorSelectionAccess = document.getElementById('colors');
 const addToCartButton = document.getElementById('addToCart');
-//part6, display data u get from api
+
 /**
  * Inserts selected item info like as description, price, name.
  * 
@@ -40,8 +39,6 @@ function displayData(product) {
     console.error('Price or description element not found');
   }
 }
-//part7
-//access to DOM
 
 /**
  * Display selected image.
@@ -49,8 +46,6 @@ function displayData(product) {
  * @param {object} product - image info
  */
 function displayImage(product) {
-  //access DOM 
-  // const articleSec = document.querySelector('article');
   const imageSection = document.querySelector('.item__img');
 
   const imageElement = document.createElement('img');
@@ -85,7 +80,6 @@ addToCartButton.addEventListener('click', () => {
   const quantity = parseInt(document.getElementById('quantity').value);
   const color = document.getElementById('colors').value;
   if (quantity && color) {
-    //create an array of item detail
     let cartItem = {
       id: productId,
       color,

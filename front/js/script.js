@@ -14,7 +14,7 @@ fetch('http://localhost:3000/api/products')
       console.log(item);
   
       const productElement = document.createElement('a');
-      productElement.href = `./product.html?id=${item._id}`;//mls4
+      productElement.href = `./product.html?id=${item._id}`;
   
       const articleElement = document.createElement('article');
       productElement.appendChild(articleElement);
@@ -24,15 +24,11 @@ fetch('http://localhost:3000/api/products')
       imageElement.setAttribute('alt', item.altTxt);
   
       articleElement.appendChild(imageElement);
-  
-      //this line display item's name and description
+
       articleElement.innerHTML += `
         <h3 class="productName">${item.name}</h3>
         <p class="productDescription">${item.description}</p>
       `;
-  
-  
       itemsHolder.appendChild(productElement);
     }
-  
   }

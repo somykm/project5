@@ -52,28 +52,20 @@ document.addEventListener('DOMContentLoaded', function () {
           input.setAttribute('max', '100');
           input.setAttribute('value', cartItem.quantity);
 
-          // Add event listener for quantity change
           input.addEventListener('change', ($event) => {
             const articleElement = $event.target.closest('article');
             const newQuantity = parseInt($event.target.value, 10);
             const itemId = articleElement.getAttribute('data-id');
             const itemColor = articleElement.getAttribute('data-color');
 
-            // Update the cart array
             const cartItem = cart.find(item => item.id === itemId && item.color === itemColor);
             if (cartItem) {
               cartItem.quantity = newQuantity;
             }
-            // Update local storage
+
             localStorage.setItem('cart', JSON.stringify(cart));
             updateTotalPrice(cart);
             updateTotalQuantity(cart);
-
-            //TODO add code to get the new quantity for the cart item that being change by user
-            //TODO get cart item, product id and color that being changed
-            //TODO get the latest cart from local Storage
-            //TODO provide the price of the item that has been changed by passing in the products array 
-            //TODO after getting the new quantity update the new totals, price, and local Storage 
           });
 
           itemContentSettingQuantity.appendChild(input);
@@ -85,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
           cartItemContentSetting.appendChild(deleteItem);
 
-          // Add event listener for delete button
           deleteItem.addEventListener('click', ($event) => {
             const cartArticle = $event.target.closest('.cart__item');
             const itemId = cartArticle.getAttribute('data-id');
@@ -101,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
 
-      // Calculate and display total price
       const updateTotalPrice = (cart) => {
         const totalPrice = cart.reduce((total, cartItem) => {
           const product = products.find(item => item._id === cartItem.id);
@@ -110,13 +100,11 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('totalPrice').innerText = `${totalPrice}`;
       };
 
-      // Update total quantity
       const updateTotalQuantity = (cart) => {
         const totalQuantity = cart.reduce((total, cartItem) => total + cartItem.quantity, 0);
         document.getElementById('totalQuantity').innerText = `${totalQuantity}`;
       };
 
-      //update local storage
       const updateLocalStorage = (cart) => {
         localStorage.setItem('cart', JSON.stringify(cart));
       };
@@ -150,9 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     let isValid = true;
-
-    // Validate first name, last, address...
-    const nameRegex = /^[a-z]*$/;// lowercase
+    const nameRegex = /^[A-Za-z]{3,100}$/;
     if (!nameRegex.test(contact.firstName)) {
       document.getElementById('firstNameErrorMsg').innerText = 'Enter a valid name';
       isValid = false;
@@ -167,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('lastNameErrorMsg').innerText = '';
     }
 
-    const addressRegex =/^\d+\s[A-Aa-z\s]+$/; //start with num, followed by street name
+    const addressRegex = /^\d+\s[A-Aa-z\s]+$/;
     if (!addressRegex.test(contact.address)) {
       addressErrorMsg.innerText = 'Enter a valid address!';
       isValid = false;
@@ -175,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
       addressErrorMsg.innerText = '';
     }
 
-    const cityRegex =/^[A-Za-z\s]+$/;//only letter and white space
+    const cityRegex = /^[A-Za-z\s]+$/;
     if (!cityRegex.test(contact.city)) {
       cityErrorMsg.innerText = 'Enter a valid city name!';
       isValid = false;
@@ -192,9 +178,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (isValid) {
-      // Create order object
       const productIds = [];
-       productIds.forEach(item => {
+      productIds.forEach(item => {
         productIds.push(item.id);
       });
 
@@ -203,7 +188,6 @@ document.addEventListener('DOMContentLoaded', function () {
         products: productIds
       };
 
-      // Send order to server
       fetch('http://localhost:3000/api/products/order', {
         method: 'POST',
         headers: {
@@ -219,11 +203,9 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(data => {
           alert('Order confirmed! Order ID: ' + data.orderId);
-          // Clear cart and local storage
-          cart = [];
           localStorage.removeItem('cart');
-          updateTotalPrice();
-          updateTotalQuantity();
+          //TODO redirect user to confirmation page with orderId as quary prometter
+          console.log();
         })
         .catch(error => {
           console.error('There was a problem with the fetch operation:', error);
