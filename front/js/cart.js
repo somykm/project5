@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('lastNameErrorMsg').innerText = '';
     }
 
-    const addressRegex = /^\d+\s[A-Aa-z\s]+$/;
+    const addressRegex = /^\d+\s[A-Za-z\s]+$/;
     if (!addressRegex.test(contact.address)) {
       addressErrorMsg.innerText = 'Enter a valid address!';
       isValid = false;
@@ -183,10 +183,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (isValid) {
-      const productIds = [];
-      productIds.forEach(item => {
-        productIds.push(item.id);
-      });
+      const productIds = JSON.parse(localStorage.getItem('cart')).map(item => item.id);
+      ;
 
       const order = {
         contact: contact,
@@ -209,8 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
           alert('Order confirmed! Order ID: ' + data.orderId);
           localStorage.removeItem('cart');
-          //TODO redirect user to confirmation page with orderId as quary prometter
-          console.log();
+          window.location.href = `confirmation.html?orderId=${data.orderId}`;
         })
         .catch(error => {
           console.error('There was a problem with the fetch operation:', error);
