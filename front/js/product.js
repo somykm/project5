@@ -86,7 +86,7 @@ addToCartButton.addEventListener('click', () => {
       quantity
     };
 
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const itemIdToFind = productId;
     let foundItem = false;
     for (let item of cart) {

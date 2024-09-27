@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   const cartItems = document.getElementById('cart__items');
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
   fetch(`http://localhost:3000/api/products`)
     .then(respond => respond.json())
@@ -182,10 +182,9 @@ document.addEventListener('DOMContentLoaded', function () {
       emailErrorMsg.innerText = '';
     }
 
-    if (isValid) {
-      const productIds = JSON.parse(localStorage.getItem('cart')).map(item => item.id);
-      ;
-
+    const productIds = JSON.parse(localStorage.getItem('cart')|| '[]').map(item => item.id);
+    if (isValid && productIds) {
+  
       const order = {
         contact: contact,
         products: productIds
@@ -212,6 +211,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => {
           console.error('There was a problem with the fetch operation:', error);
         });
+    }
+    else{
+      alert("Please verify the order information");
     }
   });
 });
